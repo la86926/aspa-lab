@@ -1,108 +1,78 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f5f5f7">
-  <title>Aspa Quest · Factorización visual</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f5f5f7">
+<title>Aspa Rush · Factoriza jugando</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="app">
-    <header class="hero glass">
-      <div class="hero-copy">
-        <span class="eyebrow">Factorización visual · aprende jugando</span>
-        <h1>Aspa Quest</h1>
-        <p>No es una hoja digital. Primero reconoces, luego construyes y al final ves exactamente qué producto genera cada término.</p>
-        <div class="mode-switch" role="tablist" aria-label="Tipo de aspa">
-          <button id="simpleTab" class="mode active" type="button">Aspa simple</button>
-          <button id="doubleTab" class="mode" type="button">Aspa doble</button>
-        </div>
+<main class="game-shell" id="game">
+  <header class="topbar">
+    <div class="brand"><span class="logo">×</span><div><b>Aspa Rush</b><small>Factoriza jugando</small></div></div>
+    <div class="hud">
+      <div class="hud-item"><span>⭐</span><b id="score">0</b></div>
+      <div class="hud-item"><span>🔥</span><b id="combo">x1</b></div>
+      <div class="hud-item hearts" id="hearts">♥ ♥ ♥</div>
+      <button id="soundBtn" class="icon-btn" type="button" title="Sonido">🔊</button>
+    </div>
+  </header>
+
+  <section id="startScreen" class="screen start-screen">
+    <div class="start-orb"><span>×</span></div>
+    <p class="kicker">RETO CONTRARRELOJ</p>
+    <h1>¿Qué tan rápido<br>dominas el aspa?</h1>
+    <p class="start-copy">Elige la factorización correcta antes de que se agote el tiempo. Cada acierto enciende el aspa y aumenta tu combo.</p>
+    <div class="mode-picker">
+      <button class="mode-card active" data-mode="simple" type="button"><span>⚡</span><b>Aspa simple</b><small>Rápido · 12 s por reto</small></button>
+      <button class="mode-card" data-mode="double" type="button"><span>🚀</span><b>Aspa doble</b><small>Desafío · 18 s por reto</small></button>
+    </div>
+    <button id="playBtn" class="play-btn" type="button">Jugar ahora <span>→</span></button>
+  </section>
+
+  <section id="playScreen" class="screen play-screen hidden">
+    <div class="round-head">
+      <div class="round-label">RONDA <b id="round">1</b></div>
+      <div class="timer"><div id="timerBar"></div></div>
+      <div class="seconds"><b id="seconds">12</b>s</div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="target-wrap">
+        <span class="target-label">FACTORIZA</span>
+        <div id="polynomial" class="polynomial">x² + 5x + 6</div>
       </div>
-      <div class="stats">
-        <div class="stat"><strong id="points">0</strong><span>Puntos</span></div>
-        <div class="stat"><strong id="stars">0</strong><span>Estrellas</span></div>
-        <div class="stat"><strong id="round">1</strong><span>Reto</span></div>
+
+      <div id="options" class="options"></div>
+
+      <div id="laserStage" class="laser-stage hidden" aria-live="polite">
+        <svg id="laserSvg" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet"></svg>
+        <div id="laserMessage" class="laser-message"></div>
       </div>
-    </header>
 
-    <section class="mission glass">
-      <div class="mission-top">
-        <div>
-          <span class="eyebrow">Misión actual</span>
-          <h2 id="missionTitle">1. Detecta la estructura</h2>
-        </div>
-        <span id="phaseBadge" class="phase-badge">Fase 1 de 3</span>
-      </div>
-      <div class="progress"><span id="progressBar"></span></div>
-      <div class="roadmap">
-        <div id="road1" class="road active"><b>1</b><span>Reconocer</span></div>
-        <div id="road2" class="road"><b>2</b><span>Construir</span></div>
-        <div id="road3" class="road"><b>3</b><span>Verificar</span></div>
-      </div>
-    </section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
 
-    <section class="grid">
-      <article class="board glass">
-        <div class="problem-head">
-          <div>
-            <span class="eyebrow">Reto</span>
-            <div id="problem" class="problem">x² + 5x + 6</div>
-          </div>
-          <button id="newBtn" class="icon-btn" type="button" title="Nuevo reto" aria-label="Nuevo reto">↻</button>
-        </div>
+    <div class="game-actions">
+      <button id="hintBtn" class="mini-btn" type="button">💡 50/50</button>
+      <button id="skipBtn" class="mini-btn" type="button">↻ Saltar</button>
+    </div>
+  </section>
 
-        <section id="phase1" class="phase-panel">
-          <h3>¿Cuál factorización podría ser correcta?</h3>
-          <p class="muted">No calcules todo todavía. Mira los extremos, los signos y anticipa qué debería ocurrir en el cruce.</p>
-          <div id="choices" class="choices"></div>
-        </section>
-
-        <section id="phase2" class="phase-panel hidden">
-          <h3>Construye los factores</h3>
-          <p class="muted">Toca una ficha y luego el espacio donde quieres colocarla. Así conviertes la factorización en una construcción.</p>
-          <div id="factorArea" class="factor-area"></div>
-          <div id="bank" class="bank"></div>
-          <div class="actions">
-            <button id="clearBtn" class="btn secondary" type="button">Limpiar</button>
-            <button id="checkBuildBtn" class="btn primary" type="button">Comprobar construcción</button>
-          </div>
-        </section>
-
-        <section id="phase3" class="phase-panel hidden">
-          <h3>Ahora observa de dónde sale cada término</h3>
-          <div class="aspa-stage">
-            <svg id="aspaSvg" viewBox="0 0 720 360" aria-label="Visualización de productos cruzados"></svg>
-          </div>
-          <div id="checks" class="checks"></div>
-          <div class="actions">
-            <button id="animateBtn" class="btn secondary" type="button">Animar aspas</button>
-            <button id="nextBtn" class="btn primary" type="button">Siguiente reto</button>
-          </div>
-        </section>
-
-        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
-      </article>
-
-      <aside class="side-stack">
-        <section class="concept glass">
-          <span class="eyebrow">Idea clave</span>
-          <h2 id="conceptTitle">El término central nace de dos productos</h2>
-          <div id="conceptBody" class="concept-body"></div>
-          <div class="formula-card">
-            <small>Lo que producen tus factores</small>
-            <strong id="expansion">—</strong>
-          </div>
-        </section>
-
-        <section class="coach glass">
-          <span class="eyebrow">Modo explicación</span>
-          <h2>Haz que lo diga en voz alta</h2>
-          <p id="coachText">“Estos dos productos deben sumar el término central”. Si puede explicar eso, ya no está copiando el algoritmo: lo está entendiendo.</p>
-        </section>
-      </aside>
-    </section>
-  </main>
-  <script src="app.js"></script>
+  <section id="gameOver" class="screen over-screen hidden">
+    <div class="trophy">🏆</div>
+    <p class="kicker">PARTIDA TERMINADA</p>
+    <h2 id="finalTitle">Buen intento</h2>
+    <div class="final-score"><span>Puntaje</span><b id="finalScore">0</b></div>
+    <div class="final-grid">
+      <div><b id="finalCorrect">0</b><span>Aciertos</span></div>
+      <div><b id="bestCombo">x1</b><span>Mejor combo</span></div>
+    </div>
+    <button id="againBtn" class="play-btn" type="button">Jugar otra vez <span>↻</span></button>
+    <button id="changeModeBtn" class="text-btn" type="button">Cambiar modo</button>
+  </section>
+</main>
+<script src="app.js"></script>
 </body>
 </html>
