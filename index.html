@@ -4,75 +4,90 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f5f5f7">
-<title>Aspa Rush · Factoriza jugando</title>
-<link rel="stylesheet" href="styles.css?v=20260825-1">
+<title>Descubre el Aspa · Aprende jugando</title>
+<link rel="stylesheet" href="styles.css?v=20260825-2">
 </head>
 <body>
-<main class="game-shell" id="game">
+<main class="app" id="app">
   <header class="topbar">
-    <div class="brand"><span class="logo">×</span><div><b>Aspa Rush</b><small>Factoriza jugando</small></div></div>
+    <div class="brand">
+      <div class="brand-mark">×</div>
+      <div><b>Descubre el Aspa</b><small>Aprende antes de memorizar</small></div>
+    </div>
     <div class="hud">
-      <div class="hud-item"><span>⭐</span><b id="score">0</b></div>
-      <div class="hud-item"><span>🔥</span><b id="combo">x1</b></div>
-      <div class="hud-item hearts" id="hearts">♥ ♥ ♥</div>
-      <button id="soundBtn" class="icon-btn" type="button" title="Sonido">🔊</button>
+      <div class="hud-pill">⭐ <b id="stars">0</b></div>
+      <div class="hud-pill">🧭 <b id="routeName">Aspa simple</b></div>
     </div>
   </header>
 
-  <section id="startScreen" class="screen start-screen">
-    <div class="start-orb"><span>×</span></div>
-    <p class="kicker">RETO CONTRARRELOJ</p>
-    <h1>¿Qué tan rápido<br>dominas el aspa?</h1>
-    <p class="start-copy">Elige la factorización correcta antes de que se agote el tiempo. Cada acierto enciende el aspa y aumenta tu combo.</p>
-    <div class="mode-picker">
-      <button class="mode-card active" data-mode="simple" type="button"><span>⚡</span><b>Aspa simple</b><small>Rápido · 12 s por reto</small></button>
-      <button class="mode-card" data-mode="double" type="button"><span>🚀</span><b>Aspa doble</b><small>Desafío · 18 s por reto</small></button>
+  <section id="startScreen" class="screen start">
+    <div class="start-icon">×</div>
+    <p class="kicker">RUTA DE DESCUBRIMIENTO</p>
+    <h1>Aprende el aspa<br>sin saber la regla</h1>
+    <p class="start-copy">Empiezas jugando con números y cruces. Después descubres qué patrón se repite. Recién al final usamos la regla completa.</p>
+    <div class="start-note">✓ Sin cronómetro · ✓ Sin perder vidas · ✓ Puedes intentar varias veces</div>
+
+    <div class="route-grid">
+      <button class="route-card active" data-route="simple" type="button">
+        <span class="route-icon">🧩</span>
+        <b>Ruta Aspa simple</b>
+        <small>Empieza aquí · 4 misiones progresivas</small>
+      </button>
+      <button class="route-card" data-route="double" type="button">
+        <span class="route-icon">🔀</span>
+        <b>Ruta Aspa doble</b>
+        <small>Recomendado después de dominar la simple</small>
+      </button>
     </div>
-    <button id="playBtn" class="play-btn" type="button">Jugar ahora <span>→</span></button>
+
+    <button id="startBtn" class="primary blue" type="button">Comenzar misión <span>→</span></button>
   </section>
 
-  <section id="playScreen" class="screen play-screen hidden">
-    <div class="round-head">
-      <div class="round-label">RONDA <b id="round">1</b></div>
-      <div class="timer"><div id="timerBar"></div></div>
-      <div class="seconds"><b id="seconds">12</b>s</div>
+  <section id="playScreen" class="screen play hidden">
+    <div class="missionbar">
+      <div class="mission-label">Ruta: <b id="routeMini">Descubrimiento</b></div>
+      <div class="progress"><span id="progressBar"></span></div>
+      <div id="stageCount" class="stage-count">1 de 12</div>
     </div>
 
-    <div class="arena" id="arena">
-      <div class="target-wrap">
-        <span class="target-label">FACTORIZA</span>
-        <div id="polynomial" class="polynomial">x² + 5x + 6</div>
+    <section class="board">
+      <div class="stage-head">
+        <span id="stageChip" class="stage-chip">MISIÓN 1</span>
+        <h2 id="stageTitle" class="stage-title">Cruces secretos</h2>
+        <p id="stageSub" class="stage-sub">Todavía no hay letras. Solo descubre qué hacen las diagonales.</p>
       </div>
 
-      <div id="options" class="options"></div>
+      <div id="gameArea" class="game-area"></div>
 
-      <div id="laserStage" class="laser-stage hidden" aria-live="polite">
-        <svg id="laserSvg" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet"></svg>
-        <div id="laserMessage" class="laser-message"></div>
+      <div class="hintbar">
+        <button id="hintBtn" class="secondary" type="button">💡 Dame una pista</button>
+        <button id="restartBtn" class="secondary" type="button">↩ Cambiar ruta</button>
       </div>
 
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    </div>
-
-    <div class="game-actions">
-      <button id="hintBtn" class="mini-btn" type="button">💡 50/50</button>
-      <button id="skipBtn" class="mini-btn" type="button">↻ Saltar</button>
-    </div>
+      <div id="feedbackWrap" class="feedback-wrap hidden" aria-live="polite">
+        <div id="feedbackCard" class="feedback-card info">
+          <div id="feedbackIcon" class="feedback-icon">💡</div>
+          <h3 id="feedbackTitle">Pista</h3>
+          <p id="feedbackText"></p>
+          <div id="feedbackVisual" class="feedback-visual"></div>
+          <button id="feedbackBtn" class="primary blue" type="button">Entendido</button>
+        </div>
+      </div>
+    </section>
   </section>
 
-  <section id="gameOver" class="screen over-screen hidden">
-    <div class="trophy">🏆</div>
-    <p class="kicker">PARTIDA TERMINADA</p>
-    <h2 id="finalTitle">Buen intento</h2>
-    <div class="final-score"><span>Puntaje</span><b id="finalScore">0</b></div>
-    <div class="final-grid">
-      <div><b id="finalCorrect">0</b><span>Aciertos</span></div>
-      <div><b id="bestCombo">x1</b><span>Mejor combo</span></div>
+  <section id="unlockScreen" class="screen unlock hidden">
+    <div class="unlock-inner">
+      <div class="unlock-icon">🏆</div>
+      <p class="kicker">MISIÓN COMPLETADA</p>
+      <h2 id="unlockTitle">¡Descubriste el método del aspa!</h2>
+      <div id="unlockStars" class="stars-big">⭐⭐⭐⭐⭐</div>
+      <p id="unlockText">Primero entendiste los cruces, luego las parejas y recién después factorizar.</p>
+      <button id="nextRouteBtn" class="primary blue" type="button">Aprender aspa doble →</button>
+      <div style="margin-top:12px"><button id="restartBtn2" class="secondary" type="button" onclick="location.reload()">Volver al inicio</button></div>
     </div>
-    <button id="againBtn" class="play-btn" type="button">Jugar otra vez <span>↻</span></button>
-    <button id="changeModeBtn" class="text-btn" type="button">Cambiar modo</button>
   </section>
 </main>
-<script src="app.js?v=20260825-1"></script>
+<script src="app.js?v=20260825-2"></script>
 </body>
 </html>
