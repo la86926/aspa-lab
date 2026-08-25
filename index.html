@@ -4,90 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f5f5f7">
-<title>Descubre el Aspa · Aprende jugando</title>
-<link rel="stylesheet" href="styles.css?v=20260825-3">
+<title>Descubre el Aspa</title>
+<link rel="stylesheet" href="styles.css?v=20260825-4">
 </head>
 <body>
-<main class="app" id="app">
+<main class="app">
   <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">×</div>
-      <div><b>Descubre el Aspa</b><small>Aprende antes de memorizar</small></div>
-    </div>
-    <div class="hud">
-      <div class="hud-pill">⭐ <b id="stars">0</b></div>
-      <div class="hud-pill">🧭 <b id="routeName">Aspa simple</b></div>
-    </div>
+    <div class="brand"><span class="brand-mark">×</span><div><b>Descubre el Aspa</b><small>Suma · producto · signos</small></div></div>
+    <div class="hud"><span class="pill">⭐ <b id="stars">0</b></span><span class="pill route-pill" id="routeName">Aspa simple</span></div>
   </header>
 
   <section id="startScreen" class="screen start">
-    <div class="start-icon">×</div>
-    <p class="kicker">RUTA DE DESCUBRIMIENTO</p>
-    <h1>Aprende el aspa<br>sin saber la regla</h1>
-    <p class="start-copy">Empiezas jugando con números y cruces. Después descubres qué patrón se repite. Recién al final usamos la regla completa.</p>
-    <div class="start-note">✓ Sin cronómetro · ✓ Sin perder vidas · ✓ Puedes intentar varias veces</div>
+    <div class="hero-mark">×</div>
+    <h1>Suma. Producto.<br><span>Signos.</span></h1>
+    <p>Primero entiendes el patrón. Después aparece el aspa.</p>
 
-    <div class="route-grid">
-      <button class="route-card active" data-route="simple" type="button">
-        <span class="route-icon">🧩</span>
-        <b>Ruta Aspa simple</b>
-        <small>Empieza aquí · 4 misiones progresivas</small>
-      </button>
-      <button class="route-card" data-route="double" type="button">
-        <span class="route-icon">🔀</span>
-        <b>Ruta Aspa doble</b>
-        <small>Recomendado después de dominar la simple</small>
-      </button>
+    <div class="rule-preview" aria-label="Regla visual">
+      <div class="rule-chip blue"><b>1</b><span>Pareja</span></div>
+      <div class="rule-chip pink"><b>2</b><span>Signos</span></div>
+      <div class="rule-chip violet"><b>3</b><span>Aspa</span></div>
     </div>
 
-    <button id="startBtn" class="primary blue" type="button">Comenzar misión <span>→</span></button>
+    <div class="route-grid">
+      <button class="route-card active" data-route="simple" type="button"><span>🧩</span><b>Aspa simple</b><small>Empieza aquí</small></button>
+      <button class="route-card" data-route="double" type="button"><span>🔀</span><b>Aspa doble</b><small>Después de la simple</small></button>
+    </div>
+
+    <button id="startBtn" class="primary" type="button">Empezar <span>→</span></button>
   </section>
 
   <section id="playScreen" class="screen play hidden">
-    <div class="missionbar">
-      <div class="mission-label">Ruta: <b id="routeMini">Aspa simple</b></div>
+    <div class="progress-row">
+      <button id="backBtn" class="icon-btn" type="button" aria-label="Volver">←</button>
       <div class="progress"><span id="progressBar"></span></div>
-      <div id="stageCount" class="stage-count">1 de 12</div>
+      <b id="counter">1/12</b>
     </div>
 
     <section class="board">
-      <div class="stage-head">
-        <span id="stageChip" class="stage-chip">MISIÓN 1</span>
-        <h2 id="stageTitle" class="stage-title">Cruces secretos</h2>
-        <p id="stageSub" class="stage-sub">Todavía no hay letras. Solo descubre qué hacen las diagonales.</p>
+      <div class="stage-top">
+        <span id="stageChip" class="stage-chip">1 · PAREJA</span>
+        <h2 id="stageTitle">Encuentra los números</h2>
       </div>
 
       <div id="gameArea" class="game-area"></div>
 
-      <div class="hintbar">
-        <button id="hintBtn" class="secondary" type="button">💡 Dame una pista</button>
-        <button id="restartBtn" class="secondary" type="button">↩ Cambiar ruta</button>
+      <div class="bottom-actions">
+        <button id="hintBtn" class="secondary" type="button">Pista</button>
       </div>
 
-      <div id="feedbackWrap" class="feedback-wrap hidden" aria-live="polite">
-        <div id="feedbackCard" class="feedback-card info">
-          <div id="feedbackIcon" class="feedback-icon">💡</div>
-          <h3 id="feedbackTitle">Pista</h3>
-          <p id="feedbackText"></p>
-          <div id="feedbackVisual" class="feedback-visual"></div>
-          <button id="feedbackBtn" class="primary blue" type="button">Entendido</button>
+      <div id="feedback" class="feedback hidden" aria-live="polite">
+        <div class="feedback-icon" id="feedbackIcon">✓</div>
+        <div class="feedback-copy">
+          <b id="feedbackTitle">Correcto</b>
+          <div id="feedbackVisual"></div>
         </div>
+        <button id="feedbackBtn" class="primary compact" type="button">Continuar</button>
       </div>
     </section>
   </section>
 
-  <section id="unlockScreen" class="screen unlock hidden">
-    <div class="unlock-inner">
-      <div class="unlock-icon">🏆</div>
-      <p class="kicker">MISIÓN COMPLETADA</p>
-      <h2 id="unlockTitle">¡Descubriste el método del aspa!</h2>
-      <div id="unlockStars" class="stars-big">⭐⭐⭐⭐⭐</div>
-      <p id="unlockText">Primero entendiste los cruces, luego las parejas y recién después factorizar.</p>
-      <button id="nextRouteBtn" class="primary blue" type="button">Aprender aspa doble →</button>
-      <div style="margin-top:12px"><button class="secondary" type="button" onclick="location.reload()">Volver al inicio</button></div>
+  <section id="finishScreen" class="screen finish hidden">
+    <div class="finish-icon">✓</div>
+    <h2 id="finishTitle">Aspa simple desbloqueada</h2>
+    <p id="finishText">Ya sabes qué buscar antes de dibujar el aspa.</p>
+    <div class="finish-rule">
+      <span class="blue">pareja</span><span>→</span><span class="pink">signos</span><span>→</span><span class="violet">aspa</span>
     </div>
+    <button id="nextRouteBtn" class="primary" type="button">Ir a aspa doble →</button>
+    <button id="homeBtn" class="text-btn" type="button">Volver al inicio</button>
   </section>
 </main>
-<script src="app-v2.js?v=20260825-3"></script>
+<script src="app-v2.js?v=20260825-4"></script>
 </body>
 </html>
